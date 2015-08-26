@@ -9,6 +9,7 @@
 
 using namespace std;
 
+//将10进制数转换为26进制的数
 void decimal_26radix(int x,stack<char>& is)
 {
 	
@@ -50,7 +51,20 @@ void print_nbits_max(int n)
 				output_str[len - 1 - i] += 1;
 			}
 		}
-		cout << output_str << " ";
+		//输出的时候，可以考虑将字符串前面的0去掉
+		int k = 0;
+		while (k<len)
+		{
+			if (output_str[k] != '0')
+			{
+				cout << &output_str[k] << " ";
+				break;
+			}
+			k++;
+				
+			
+		}
+		//cout << output_str << " ";
 
 	}
 	cout << endl;
