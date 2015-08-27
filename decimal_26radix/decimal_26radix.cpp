@@ -73,6 +73,58 @@ void print_nbits_max(int n)
 	cout << "duration= " << duration << endl;
 }
 
+struct node
+{
+	node(int value=0):data(value),pleft(0),pright(0){}
+	int data;
+	node * pleft;
+	node * pright;
+
+};
+
+//判断一个子树是否和另外一个子树相同
+bool issubtreecomman(node* root1, node* root2)
+{
+	if (root1==NULL)
+	{
+		return false;
+	}
+	if (root2==NULL)
+	{
+		return true;
+	}
+	if (root1->data!=root2->data)
+	{
+		return false;
+	}
+
+	return (issubtreecomman(root1->pleft,root2->pleft)&&issubtreecomman(root1->pright,root2->pright));
+
+
+}
+
+//判断一个子树(root2)结构是否是另外一个子树(root1)的子树
+bool issubtree(node* root1, node* root2)
+{
+	bool result = false;
+	if (root1!=NULL&&root2!=NULL)
+	{
+		if (root1->data == root2->data)
+		{
+			result= issubtreecomman(root1,root2);
+		}
+		if (!result)
+		{
+			result = issubtreecomman(root1->pleft,root2->pright);
+		}
+		if (!result)
+		{
+			result = issubtreecomman(root1->pright,root2->pright);
+		}
+		return	result;
+	}
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 #pragma region //将十进制数转换为26进制
