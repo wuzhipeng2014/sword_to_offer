@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include <stack>
 #include <iostream>
+
 using namespace std;
 
 
@@ -37,6 +38,7 @@ node* createBT()
 
 }
 
+//打印栈中的元素
 void printstack(stack<int> s)
 {
 	stack<int> tmp = s;
@@ -87,6 +89,143 @@ void printpath(node * root,int n)
 }
 
 
+typedef pair<node*, node*> head_rear;
+//将二叉搜索树转换为排序的双向链表
+head_rear convert_searchtree2list(node* root)
+{
+	head_rear rtn;
+	node* p = 0;
+	head_rear pre = make_pair(p,p);;
+	head_rear post = make_pair(p,p);
+	if (root==NULL)
+	{
+		
+		return make_pair(p, p);
+	}
+	if (root->pleft==NULL)
+	{
+
+		pre.first = root;
+		pre.second = root;
+		/*root->pleft =root;*/
+
+	}
+	else
+	{
+		pre = convert_searchtree2list(root->pleft);
+		root->pleft = pre.second;
+		if (pre.second)
+		{
+			pre.second->pright = root;
+		}
+		
+	}
+
+	if (root->pright==NULL)
+	{
+		post.first = root;
+		post.second = root;
+		/*root->pright = root;*/
+	}
+	else
+	{
+		post = convert_searchtree2list(root->pright);
+		root->pright = post.first;
+		if (post.first)
+		{
+			post.first->pleft = root;
+		}
+		
+	}
+
+#pragma region
+	/*if (root->pleft)
+	{
+		 pre= convert_searchtree2list(root->pleft);
+		root->pleft = pre.second;
+		pre.second->pright = root;
+	}
+	if (root->pright)
+	{
+		 post = convert_searchtree2list(root->pright);
+		root->pright = post.first;
+		post.first->pleft = root;
+	}*/
+#pragma endregion
+	return make_pair(pre.first,post.second);
+	/*if (pre.first||post.second)
+	{
+		return make_pair(pre.first, post.second);
+	}
+	else
+	{
+		return rtn;
+	}*/
+	
+}
+
+//构建一个二叉的搜索树
+node* creat_searchtree()
+{
+	node* n1 = new node(20);
+	node* n2 = new node(10);
+	node* n3 = new node(30);
+	node* n4 = new node(5);
+	node* n5 = new node(15);
+	node* n6 = new node(25);
+	node* n7 = new node(35);
+	n1->pleft = n2;
+	n1->pright = n3;
+	n2->pleft = n4;
+	n2->pright = n5;
+	n3->pleft = n6;
+	n3->pright = n7;
+	return n1;
+}
+
+node* creat_st()
+{
+	node* n1 = new node(20);
+	node* n2 = new node(10);
+	node* n3 = new node(30);
+	node* n4 = new node(5);
+	node* n5 = new node(15);
+	node* n6 = new node(25);
+	node* n7 = new node(35);
+	n1->pleft = n2;
+	n2->pleft = n5;
+	n5->pleft = n4;
+	return n1;
+}
+
+
+//打印链表中的数据
+void printlist(node* root)
+{
+	node* pcur = root;
+	while (pcur)
+	{
+		cout << pcur->data << " ";
+		pcur = pcur->pright;
+	}
+	cout << endl;
+
+}
+
+void printlist_reverse(node* root)
+{
+	node* pcur = root;
+	while (pcur->pright)
+	{
+		pcur = pcur->pright;
+	}
+	while (pcur)
+	{
+		cout << pcur->data << " ";
+		pcur = pcur->pleft;
+	}
+	cout << endl;
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -112,8 +251,19 @@ int _tmain(int argc, _TCHAR* argv[])
 #pragma endregion
 
 #pragma region //打印二叉树的所有路径
-	node* root = createBT();
-	printpath(root,10);
+	/*node* root = createBT();
+	printpath(root,10);*/
+#pragma endregion
+
+#pragma region //将排序二叉树转换为排序的双向链表
+	//node* root = creat_searchtree();
+	node* root = creat_st();
+	head_rear re= convert_searchtree2list(root);
+	printlist(re.first);
+	//printlist(re.second);
+	printlist_reverse(re.first);
+
+	
 #pragma endregion
 	return 0;
 }
